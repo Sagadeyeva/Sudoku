@@ -1,21 +1,22 @@
 package sveta.myapplication;
 
-
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class Algorythm {
+public final class Algorithm {
     private Grid solvingGrid;
     private Stack<Grid> gridChanges = new Stack<>();
 
+    //O(N^2 * O(cellVariants))
     private int oneVariant() {
         ArrayList<Integer> possible;
 
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (solvingGrid.getElmenet(i, j) == 0) {
+        for (int i = 0; i < Grid.SIZE; i++) {
+            for (int j = 0; j < Grid.SIZE; j++) {
+                if (solvingGrid.getElement(i, j) == 0) {
                     possible = solvingGrid.cellVariants(i, j);
-                    if (possible.size() == 0) {
+                    assert (possible != null);
+                    if (possible.isEmpty()) {
                         return -1;
                     }
                     if (possible.size() == 1) {
@@ -29,6 +30,7 @@ public class Algorythm {
         return 0;
     }
 
+    //O(N^2 * O(oneVariant))
     private boolean obvious() {
         int flag = 1;
         while (flag == 1) {
@@ -53,16 +55,18 @@ public class Algorythm {
         solvingGrid = gridChanges.pop();
     }
 
+    //O(N^2 * O(cellVariants))
     private Cell currentCell() {
         ArrayList<Integer> minPossibleVariants = new ArrayList<>();
         int minCellLine = 0;
         int minCellColumn = 0;
-        int minAmountOfVariants = 10;
+        int minAmountOfVariants = Grid.SIZE+1;
         ArrayList<Integer> currentPossibleVariants;
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (solvingGrid.getElmenet(i, j) == 0) {
+        for (int i = 0; i < Grid.SIZE && minAmountOfVariants > 2; i++) {
+            for (int j = 0; j < Grid.SIZE && minAmountOfVariants > 2; j++) {
+                if (solvingGrid.getElement(i, j) == 0) {
                     currentPossibleVariants = solvingGrid.cellVariants(i, j);
+                    assert currentPossibleVariants != null;
                     if (currentPossibleVariants.size() < minAmountOfVariants) {
                         minAmountOfVariants = currentPossibleVariants.size();
                         minPossibleVariants = currentPossibleVariants;
@@ -74,7 +78,11 @@ public class Algorythm {
         }
         return new Cell(minPossibleVariants, minCellLine, minCellColumn);
     }
-//int iteration=0;
+
+    //int iteration=0;
+
+
+    //O( (O(obvious)+O(currentCell))*N)
     private boolean mainSolver() {
 
         //iteration++;
@@ -86,14 +94,14 @@ public class Algorythm {
 //        System.out.println("Start iteration "+iteration);
 //        System.out.println(solvingGrid);
 
-       // Grid tempState=solvingGrid;
+        // Grid tempState=solvingGrid;
 
         if (!obvious()) {
-           // / solvingGrid = gridChanges.peek();
+            // / solvingGrid = gridChanges.peek();
 
             //solvingGrid=tempState;
 
-           // iteration--;
+            // iteration--;
 //            System.out.println("Obvious false. Back to "+iteration);
 //            System.out.println(solvingGrid);
             return false;
@@ -125,7 +133,7 @@ public class Algorythm {
                 return false;
         }
 
-        for (Integer variant : nextCell.possibleVariants) {
+        for (int variant : nextCell.possibleVariants) {
 
 //            System.out.println("Iteration "+iteration);
 //            System.out.println("Set elem");
@@ -136,12 +144,15 @@ public class Algorythm {
 
 //            System.out.println(solvingGrid);
 
+            //Grid previous = new Grid(solvingGrid);
             gridChanges.push(new Grid(solvingGrid));
 
-            if (mainSolver())
+            if (mainSolver()) {
                 return true;
-            else
+            } else {
+                //solvingGrid = previous;
                 undoChanges();
+            }
 
         }
 
@@ -151,7 +162,7 @@ public class Algorythm {
         return false;
     }
 
-    private final class Cell {
+    private static final class Cell {
         public final ArrayList<Integer> possibleVariants;
         public final int line;
         public final int column;
