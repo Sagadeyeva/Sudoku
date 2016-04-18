@@ -20,19 +20,14 @@
             android:layout_gravity="center"
             android:layout_marginBottom="25dip"
             android:text="@string/title"
+            android:textColor="#000000"
             android:textSize="24.5sp" />
-
-        <Button
-            android:id="@+id/continue_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Let`s PLAY!!!" />
 
         <Button
             android:id="@+id/new_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="New Game"
+            android:text="Let`s Play!"
             android:onClick="startNewGame" />
 
         <Button

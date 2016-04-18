@@ -162,6 +162,18 @@ final public class Grid {
         return grid[line][column];
     }
 
+    public boolean correctLine(int line, int column, int value) {
+        for (int i = 0; i < SIZE; i++) {
+            if (i != column) {
+                if (grid[line][i] == value) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
     //O(N)
     public boolean checkLine(int line, int value) {
         for (int i = 0; i < SIZE; i++) {
@@ -210,7 +222,7 @@ final public class Grid {
         return true;
     }
 
-    //O(UNITN)+O(N*(((N/UNIT)^2)+O(N))
+    //O(UNIT)+O(N*(((N/UNIT)^2)+O(N))
     public ArrayList<Integer> cellVariants(int line, int column) {
         if (grid[line][column] != 0) {
             //throw new AssertionError("Grid element " + line + ":" + column + " should be empty");
@@ -244,5 +256,26 @@ final public class Grid {
             }
         }
         return possibleVariants;
+    }
+
+    boolean isCorrectlySolved() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                int elem = getElement(i, j);
+                if (elem == 0)
+                    return false;
+
+                if (!checkLine(i, elem))
+                    return false;
+
+                if (!checkColumn(j, elem))
+                    return false;
+
+                if (!checkSquare(i, j, elem))
+                    return false;
+
+            }
+        }
+        return true;
     }
 }
