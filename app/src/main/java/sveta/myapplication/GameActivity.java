@@ -36,7 +36,7 @@ public class GameActivity extends Activity {
         try {
             setContentView(R.layout.activity_game);
             grid = Grid.generate(40);
-
+            sourceGrid=new Grid(grid);
 
             Log.i(TAG, "We are here");
 
@@ -143,7 +143,7 @@ public class GameActivity extends Activity {
             }
 
             Button retry=new Button(this);
-            retry.setText("retry");
+            retry.setText("<-");
             retry.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -154,6 +154,8 @@ public class GameActivity extends Activity {
                             for (int i = 0; i < 9; i++) {
                                 TextView text = (TextView) row.getChildAt(i);
                                 text.setText(String.valueOf(grid.getElement(i, j)));
+                                int elem=grid.getElement(i, j);
+                                text.setText(elem == 0 ? " " : String.valueOf(elem));
                             }
                         }
                     } catch (Exception e) {
@@ -226,7 +228,7 @@ public class GameActivity extends Activity {
 
             table.addView(firstButtonRow);
             table.addView(secondButtonRow);
-            
+
 
         } catch (Exception e) {
             Log.i(TAG, e.toString());
