@@ -173,6 +173,33 @@ final public class Grid {
         return true;
     }
 
+    public boolean correctColumn(int line, int column, int value) {
+        for (int i = 0; i < SIZE; i++) {
+            if (i != line) {
+                if (grid[i][column] == value) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean correctSquare(int line, int column, int value) {
+        int x = line / UNIT;
+        int y = column / UNIT;
+        x *= UNIT;
+        y *= UNIT;
+        for (int i = x; i < x + UNIT; i++) {
+            for (int j = y; j < y + UNIT; j++) {
+                if ((i != line) && (j != column)) {
+                    if (grid[i][j] == value) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 
     //O(N)
     public boolean checkLine(int line, int value) {
