@@ -292,13 +292,13 @@ final public class Grid {
                 if (elem == 0)
                     return false;
 
-                if (!checkLine(i, elem))
+                if (!correctLine(i, j, elem))
                     return false;
 
-                if (!checkColumn(j, elem))
+                if (!correctColumn(i,j, elem))
                     return false;
 
-                if (!checkSquare(i, j, elem))
+                if (!correctSquare(i, j, elem))
                     return false;
 
             }

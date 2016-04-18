@@ -170,21 +170,25 @@ public class GameActivity extends Activity {
 
             Button solve = new Button(this);
             solve.setText("?");
-            solve.setOnClickListener(new View.OnClickListener() {
+            solve.setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Algorithm solver = new Algorithm();
-                    grid = solver.solve(grid);
-                    for (int j = 0; j < 9; j++) {
-                        TableRow row = (TableRow) table.getChildAt(j);
-                        for (int i = 0; i < 9; i++) {
-                            TextView text = (TextView) row.getChildAt(i);
-                            text.setText(String.valueOf(grid.getElement(i, j)));
-                            //text.setBackgroundResource(R.drawable.changed_cell_background);
+
+                    try {
+                        Algorithm solver = new Algorithm();
+                        grid = solver.solve(grid);
+                        for (int j = 0; j < 9; j++) {
+                            TableRow row = (TableRow) table.getChildAt(j);
+                            for (int i = 0; i < 9; i++) {
+                                TextView text = (TextView) row.getChildAt(i);
+                                text.setText(String.valueOf(grid.getElement(i, j)));
+                                //text.setBackgroundResource(R.drawable.changed_cell_background);
+                            }
                         }
+                    } catch (Exception e) {
+                        Log.i(TAG, e.toString());
                     }
-                }
-            });
+                }});
 
             secondButtonRow.addView(solve);
             firstButtonRow.addView(check);
