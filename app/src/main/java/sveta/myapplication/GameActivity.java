@@ -22,6 +22,7 @@ public class GameActivity extends Activity {
 
 
     private Grid grid;
+    private Grid sourceGrid;
     private TableLayout table;
 
     private int selectedX = -1;
@@ -35,6 +36,7 @@ public class GameActivity extends Activity {
         try {
             setContentView(R.layout.activity_game);
             grid = Grid.generate(40);
+
 
             Log.i(TAG, "We are here");
 
@@ -102,6 +104,7 @@ public class GameActivity extends Activity {
 //кнопки для вставления чиесл польхователем в сетку
             TableRow firstButtonRow = new TableRow(this);
             TableRow secondButtonRow = new TableRow(this);
+            TableRow thirdButtonRow = new TableRow(this);
 
             for (int i = 0; i < 10; i++) {
                 Button number = new Button(this);
@@ -139,6 +142,27 @@ public class GameActivity extends Activity {
 
             }
 
+            Button retry=new Button(this);
+            retry.setText("retry");
+            retry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        grid = new Grid(sourceGrid);
+                        for (int j = 0; j < 9; j++) {
+                            TableRow row = (TableRow) table.getChildAt(j);
+                            for (int i = 0; i < 9; i++) {
+                                TextView text = (TextView) row.getChildAt(i);
+                                text.setText(String.valueOf(grid.getElement(i, j)));
+                            }
+                        }
+                    } catch (Exception e) {
+                        Log.i(TAG, e.toString());
+                    }
+                }
+            });
+
+
             Button check = new Button(this);
             check.setText("OK");
 
@@ -170,7 +194,7 @@ public class GameActivity extends Activity {
 
             Button solve = new Button(this);
             solve.setText("?");
-            solve.setOnClickListener( new View.OnClickListener() {
+            solve.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -188,16 +212,21 @@ public class GameActivity extends Activity {
                     } catch (Exception e) {
                         Log.i(TAG, e.toString());
                     }
-                }});
+                }
+            });
+
 
             secondButtonRow.addView(solve);
             firstButtonRow.addView(check);
+            firstButtonRow.addView(retry);
+
             TableRow emptyRow = new TableRow(this);
             emptyRow.setMinimumHeight(40);
             table.addView(emptyRow);
 
             table.addView(firstButtonRow);
             table.addView(secondButtonRow);
+            
 
         } catch (Exception e) {
             Log.i(TAG, e.toString());
