@@ -11,29 +11,37 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_marginBottom="25dip"
             android:text="@string/title"
             android:textColor="#000000"
-            android:textSize="24.5sp" />
+            android:textSize="24.5sp"
+            android:layout_gravity="center_horizontal" />
 
         <Button
             android:id="@+id/new_button"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Let`s Play!"
             android:onClick="startNewGame" />
 
         <Button
-            android:id="@+id/exit_button"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="EXIT :(" />
+            android:text="Difficulty"
+            android:id="@+id/difficulty_button"
+            android:layout_marginTop="5dp"
+            android:onClick="changeDifficult" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:layout_gravity="bottom"
+            android:src="@drawable/lama11"/>
     </LinearLayout>
 </LinearLayout>

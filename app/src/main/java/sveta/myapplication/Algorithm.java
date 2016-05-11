@@ -97,14 +97,7 @@ public final class Algorithm {
         // Grid tempState=solvingGrid;
 
         if (!obvious()) {
-            // / solvingGrid = gridChanges.peek();
-
-            //solvingGrid=tempState;
-
-            // iteration--;
-//            System.out.println("Obvious false. Back to "+iteration);
-//            System.out.println(solvingGrid);
-            return false;
+             return false;
         }
 //
 //        System.out.println("After obvious");

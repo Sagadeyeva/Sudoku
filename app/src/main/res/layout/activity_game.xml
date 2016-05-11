@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,9 +9,16 @@
     android:background="#F9B94E"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="sveta.myapplication.GameActivity"
-    android:id="@+id/game_layout">
+    android:id="@+id/field"
+    android:rowCount="4"
+    android:columnCount="5">
 
 
-
-
-</TableLayout>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:id="@+id/game_layout"
+        android:layout_columnSpan="5"></TableLayout>
+</GridLayout>

@@ -1,6 +1,7 @@
 package sveta.myapplication;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -24,24 +26,30 @@ public class GameActivity extends Activity {
     private Grid grid;
     private Grid sourceGrid;
     private TableLayout table;
+    private GridLayout field;
 
     private int selectedX = -1;
     private int selectedY = -1;
     private TextView selectedCell = null;
     private Drawable selectedCellColor;
+    private Drawable selectedCellDefaultColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         try {
             setContentView(R.layout.activity_game);
             grid = Grid.generate(40);
-            sourceGrid=new Grid(grid);
+            sourceGrid = new Grid(grid);
 
             Log.i(TAG, "We are here");
 
 
             table = (TableLayout) findViewById(R.id.game_layout);
+            field = (GridLayout) findViewById(R.id.field);
+
 
             table.setShrinkAllColumns(true);
             table.setStretchAllColumns(true);
@@ -75,6 +83,7 @@ public class GameActivity extends Activity {
                     final int jj = j;
                     //если ячейка занята, то возвращаем true
                     final boolean isOccupied = (grid.getElement(i, j) != 0);
+                    final Drawable defaultColor = getDrawable(backgroundColor);
                     //обработчик нажатия на выбранную пустую ячейку для дальнейшего заполнения
                     text.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -89,6 +98,9 @@ public class GameActivity extends Activity {
                                         selectedCell.setBackground(selectedCellColor);
                                     selectedCell = text;
                                     selectedCellColor = text.getBackground();
+                                    selectedCellDefaultColor = defaultColor;
+                                    text.setBackgroundColor(Color.RED);
+                                }else {
                                     text.setBackgroundColor(Color.RED);
                                 }
 
@@ -101,10 +113,10 @@ public class GameActivity extends Activity {
 
                 table.addView(row);
             }
-//кнопки для вставления чиесл польхователем в сетку
-            TableRow firstButtonRow = new TableRow(this);
-            TableRow secondButtonRow = new TableRow(this);
-            TableRow thirdButtonRow = new TableRow(this);
+//кнопки для вставления чиесл пользователем в сетку
+            //TableRow firstButtonRow = new TableRow(this);
+            //TableRow secondButtonRow = new TableRow(this);
+
 
             for (int i = 0; i < 10; i++) {
                 Button number = new Button(this);
@@ -123,27 +135,43 @@ public class GameActivity extends Activity {
                     @Override
                     public void onClick(View v) {
                         if (selectedY != -1 && selectedX != -1) {
-                            grid.setElement(selectedY, selectedX, value);
+                            if(value!=0)
+                            if (!(grid.checkLine(selectedX, value) &&
+                                    grid.checkColumn(selectedY, value) &&
+                                    grid.checkSquare(selectedX, selectedY, value))) {
+                                Toast message = Toast.makeText(getApplicationContext(),
+                                        "Think more properly!",
+                                        Toast.LENGTH_SHORT);
+                                message.setGravity(Gravity.CENTER, 0, 0);
+                                message.show();
+                                return;
+                            }
+                            grid.setElement(selectedX, selectedY, value);
                             //  TextView text = selectedCell;
                             TableRow row = (TableRow) table.getChildAt(selectedY);
                             TextView text = (TextView) row.getChildAt(selectedX);
-                            text.setBackgroundResource(R.drawable.changed_cell_background);
-                            selectedCellColor = getDrawable(R.drawable.changed_cell_background);
+                            if (value != 0) {
+                                text.setBackgroundResource(R.drawable.changed_cell_background);
+                                selectedCellColor = getDrawable(R.drawable.changed_cell_background);
+                            } else {
+                                text.setBackground(selectedCellDefaultColor);
+                                selectedCellColor = selectedCellDefaultColor;
+                            }
                             text.setText(value == 0 ? " " : String.valueOf(value));
                         }
                     }
                 });
 
-                if (i < 5) {
-                    firstButtonRow.addView(number);
-                } else {
-                    secondButtonRow.addView(number);
-                }
-
+//                if (i < 5) {
+//                    firstButtonRow.addView(number);
+//                } else {
+//                    secondButtonRow.addView(number);
+//                }
+                field.addView(number);
             }
 
-            Button retry=new Button(this);
-            retry.setText("<-");
+            Button retry = new Button(this);
+            retry.setText("clear");
             retry.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -154,7 +182,7 @@ public class GameActivity extends Activity {
                             for (int i = 0; i < 9; i++) {
                                 TextView text = (TextView) row.getChildAt(i);
                                 text.setText(String.valueOf(grid.getElement(i, j)));
-                                int elem=grid.getElement(i, j);
+                                int elem = grid.getElement(i, j);
                                 text.setText(elem == 0 ? " " : String.valueOf(elem));
                             }
                         }
@@ -166,7 +194,8 @@ public class GameActivity extends Activity {
 
 
             Button check = new Button(this);
-            check.setText("OK");
+            check.setText("       check me :)    ");
+            check.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
             check.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -195,7 +224,8 @@ public class GameActivity extends Activity {
             });
 
             Button solve = new Button(this);
-            solve.setText("?");
+            solve.setText("help!");
+            solve.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             solve.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -218,16 +248,20 @@ public class GameActivity extends Activity {
             });
 
 
-            secondButtonRow.addView(solve);
-            firstButtonRow.addView(check);
-            firstButtonRow.addView(retry);
+//            secondButtonRow.addView(solve);
+//            firstButtonRow.addView(check);
+//            firstButtonRow.addView(retry);
+            GridLayout.Spec columnSpec = GridLayout.spec(1, 3);
+            GridLayout.Spec rowSpec = GridLayout.spec(3, 1);
+            GridLayout.LayoutParams params = new GridLayout.LayoutParams(rowSpec, columnSpec);
 
-            TableRow emptyRow = new TableRow(this);
-            emptyRow.setMinimumHeight(40);
-            table.addView(emptyRow);
+            field.addView(solve);
+            field.addView(check, params);
 
-            table.addView(firstButtonRow);
-            table.addView(secondButtonRow);
+            columnSpec = GridLayout.spec(4, 1);
+            params = new GridLayout.LayoutParams(rowSpec, columnSpec);
+
+            field.addView(retry, params);
 
 
         } catch (Exception e) {
