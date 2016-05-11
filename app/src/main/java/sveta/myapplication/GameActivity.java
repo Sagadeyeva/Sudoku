@@ -33,6 +33,7 @@ public class GameActivity extends Activity {
     private TextView selectedCell = null;
     private Drawable selectedCellColor;
     private Drawable selectedCellDefaultColor;
+    private int level = 40;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,8 @@ public class GameActivity extends Activity {
 
         try {
             setContentView(R.layout.activity_game);
-            grid = Grid.generate(40);
+            level = getIntent().getExtras().getInt("LEVEL", 40);
+            grid = Grid.generate(level);
             sourceGrid = new Grid(grid);
 
             Log.i(TAG, "We are here");
@@ -100,7 +102,7 @@ public class GameActivity extends Activity {
                                     selectedCellColor = text.getBackground();
                                     selectedCellDefaultColor = defaultColor;
                                     text.setBackgroundColor(Color.RED);
-                                }else {
+                                } else {
                                     text.setBackgroundColor(Color.RED);
                                 }
 
@@ -135,17 +137,17 @@ public class GameActivity extends Activity {
                     @Override
                     public void onClick(View v) {
                         if (selectedY != -1 && selectedX != -1) {
-                            if(value!=0)
-                            if (!(grid.checkLine(selectedX, value) &&
-                                    grid.checkColumn(selectedY, value) &&
-                                    grid.checkSquare(selectedX, selectedY, value))) {
-                                Toast message = Toast.makeText(getApplicationContext(),
-                                        "Think more properly!",
-                                        Toast.LENGTH_SHORT);
-                                message.setGravity(Gravity.CENTER, 0, 0);
-                                message.show();
-                                return;
-                            }
+                            if (value != 0)
+                                if (!(grid.checkLine(selectedX, value) &&
+                                        grid.checkColumn(selectedY, value) &&
+                                        grid.checkSquare(selectedX, selectedY, value))) {
+                                    Toast message = Toast.makeText(getApplicationContext(),
+                                            "Think more properly!",
+                                            Toast.LENGTH_SHORT);
+                                    message.setGravity(Gravity.CENTER, 0, 0);
+                                    message.show();
+                                    return;
+                                }
                             grid.setElement(selectedX, selectedY, value);
                             //  TextView text = selectedCell;
                             TableRow row = (TableRow) table.getChildAt(selectedY);
