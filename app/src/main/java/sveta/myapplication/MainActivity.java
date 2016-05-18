@@ -43,22 +43,16 @@ public class MainActivity extends Activity {
 
     public void changeDifficult(View v) {
         try {
-            final EditText textInput = new EditText(context);
+            //final EditText textInput = new EditText(context);
             AlertDialog.Builder difficultyDialog = new AlertDialog.Builder(context)
-                    .setView(textInput)
+              //      .setView(textInput)
                     .setTitle("Difficulty")
                     .setMessage("Choose your level: ")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Easy", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             try {
-
-
-                                String inputString = textInput.getText().toString();
-                                Log.i(TAG, inputString);
-
-                                gameLevel = Integer.parseInt(inputString);
-
+                                gameLevel = 50;
                                 dialog.cancel();
                             } catch (Exception e) {
 
@@ -66,9 +60,17 @@ public class MainActivity extends Activity {
                             }
                         }
                     })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    .setNeutralButton("Medium", new OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            gameLevel = 80;
+                            dialog.cancel();
+                        }
+                    })
+                    .setNegativeButton("Hard", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            gameLevel = 100;
                             dialog.cancel();
                         }
                     });

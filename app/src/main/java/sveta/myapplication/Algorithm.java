@@ -78,80 +78,29 @@ public final class Algorithm {
         }
         return new Cell(minPossibleVariants, minCellLine, minCellColumn);
     }
-
-    //int iteration=0;
-
-
-    //O( (O(obvious)+O(currentCell))*N)
+       //O( (O(obvious)+O(currentCell))*N)
     private boolean mainSolver() {
-
-        //iteration++;
-
         if (solvingGrid.isSolved())
             return true;
-
-//        System.out.println();
-//        System.out.println("Start iteration "+iteration);
-//        System.out.println(solvingGrid);
-
-        // Grid tempState=solvingGrid;
-
         if (!obvious()) {
              return false;
         }
-//
-//        System.out.println("After obvious");
-//        System.out.println(solvingGrid);
-
         Cell nextCell = currentCell();
-
-//        System.out.println("Picked cell");
-//        System.out.println("Line: "+nextCell.line+" Column: "+nextCell.column);
-//        System.out.print("Variants: ");
-
-//        for (Integer var :
-//                nextCell.possibleVariants) {
-//            System.out.print(" " + var);
-//        }
-//        System.out.println();
-
         if (nextCell.possibleVariants.size() == 0) {
-            //undoChanges();
-
-//            System.out.println("No variants for next cell");
-
             if (solvingGrid.isSolved())
                 return true;
             else
                 return false;
         }
-
         for (int variant : nextCell.possibleVariants) {
-
-//            System.out.println("Iteration "+iteration);
-//            System.out.println("Set elem");
-//            System.out.println("Line: "+nextCell.line+" Column: "+nextCell.column);
-//            System.out.println("to "+variant);
-
             solvingGrid.setElement(nextCell.line, nextCell.column, variant);
-
-//            System.out.println(solvingGrid);
-
-            //Grid previous = new Grid(solvingGrid);
             gridChanges.push(new Grid(solvingGrid));
-
             if (mainSolver()) {
                 return true;
             } else {
-                //solvingGrid = previous;
-                undoChanges();
+               undoChanges();
             }
-
         }
-
-//        iteration--;
-//        System.out.println("Back to "+iteration);
-
         return false;
     }
 

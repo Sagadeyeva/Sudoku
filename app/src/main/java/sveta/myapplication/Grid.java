@@ -10,11 +10,7 @@ import java.util.Random;
 final public class Grid {
     public static final int UNIT = 3;
     public static final int SIZE = UNIT * UNIT;
-    //    public static Grid generation(int difficulty) {
-//
-//
-//    }
-//
+
     private static final int MAX_SHUFFLE = 20;
     private final int grid[][];
 
@@ -145,12 +141,16 @@ final public class Grid {
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
+        str.append("{");
         for (int i = 0; i < SIZE; i++) {
+            str.append("{");
             for (int j = 0; j < SIZE; j++) {
-                str.append(grid[i][j]);
+                str.append(grid[i][j]+", ");
             }
+            str.append("},");
             str.append("\n");
         }
+        str.append("}");
         return str.toString();
     }
 
